@@ -5,18 +5,18 @@
           <br>
           <h1 class="is-size-1">Registro de insumos</h1>
           <br>
-          <form  v-on:submit.prevent=validarVacio >
+          <form  v-on:submit.prevent=validarVacio>
               <div class="field">
                   <label class="label">Id Insumo</label>
                   <div class="control">
-    <input class="input" id="Id_insumo" type="text" v-model="insumo.Id_insumo" v-on:keyup="validarExistencia" required pattern="^([A-Z]{1,2}([0-9]{3})([0-9]){1})" placeholder="Ej. I0001">
-     <span v-show="this.idRegistrado" class="help is-danger">ID ya se encuentra registrado</span>
+    <input class="input" id="Id_insumo" type="text" v-model="insumo.Id_insumo"  disabled="true" pattern="^([A-Z]{1,2}([0-9]{3})([1-9]){1})">
+    
 
                   </div>
               </div>
                     
               <div class="field">
-                  <label class= label for="lb_Nombre_insumo">Nombre del insumo</label>
+                  <label for="lb_Nombre_insumo">Nombre del insumo</label>
                   <div class="control">
                     <input class="input" id="Nombre_insumo" type="text" v-model="insumo.Nombre" required v-on:keyup="validarE">
                   </div>                    
@@ -90,12 +90,12 @@
                   <div class="control">
                     <input class="input" id="Nombre_insumo" type="number" min="1" v-model="insumo.Punto_Reorden" required>
                   </div>                    
-              </div>
+              </div> 
                 <div class="columns">
                   <div class="column is-two-fifths"></div>
                   <div class="column">
                     <div class='control'>
-                      <button type='submit' id='btn_registro_insumo' class='button is-primary is-rigth'>Registrar</button>
+                      <button type='submit' id='btn_registro_insumo' class='button is-primary is-rigth'>Actualizar</button>
                     </div>
                   <div class="column is-two-fifths"></div>
                   </div>
@@ -118,19 +118,18 @@ export default {
     return{
       insumo:{},
       User:'',
-      id:'',
-      idRegistrado:'',
       nombre:'',
       estante:'',
       valorHorizontal:'',
       valorVertical:'',
       posicionOcupada:''
+      
     }
   },
   created: function(){
       this.User=localStorage.getItem('UsuarioLogueado')
       if(this.User!=null){
-      
+      this.consultar()
       }
 
     },
@@ -142,48 +141,42 @@ export default {
            document.getElementById("btn_registro_insumo").disabled=true
         }else{
           this.insumo.Nombre= this.nombre
-          this.agregarInsumo()
+          this.actualizarInsumo()
         }
     },
-    agregarInsumo(){
+    consultar(){
         let uri = GLOBAL.url 
-        console.log(":"+this.nombre)
-        this.axios.post(uri+'registro-insumo', this.insumo, {headers: {authorization: localStorage.getItem('token')}})
+        var conexion=uri+'mostrar-insumo/'+ this.$route.params.id
+
+        console.log('id ruta'+this.$route.params.id)
+
+        this.axios.get(conexion,{headers: {authorization: localStorage.getItem('token')}})
+        .then((response)=>{
+          this.insumo=response.data[0]
+          console.log(response.data)
+
+        })
+        .catch((err)=>{
+           alert("No se encontro insumo")
+        })
+      },
+  
+    actualizarInsumo(){
+        let uri = GLOBAL.url 
+        this.axios.put(uri+'actualizar-insumo/'+this.$route.params.id, this.insumo, {headers: {authorization: localStorage.getItem('token')}})
         .then((response) => {
                     
             alert("Insumo "+ this.insumo.Nombre+" registrado")
-            this.insumo={}
-            this.limpiar
+           
             
         })
         .catch((err)=>{
-          alert('Error al insertar datos');
-          this.insumo={}
+          alert('Error');
+          //this.insumo={}
 
         })
     },
-    limpiar: function(event) {
-      
-      event.target.reset();
-    },
-
-    validarExistencia(event){
-        let uri = GLOBAL.url 
-        this.id = document.getElementById('Id_insumo').value
-        var conexion=uri+'validar-IdInsumo/'+ this.id
-        
-        this.axios.get(conexion,{headers: {authorization: localStorage.getItem('token')}})
-        .then((response)=>{
-          document.getElementById("btn_registro_insumo").disabled=true
-          this.idRegistrado=true
-          
-        })
-        .catch((err)=>{
-          document.getElementById("btn_registro_insumo").disabled=false
-          this.idRegistrado=false
-        })
-      },
-      validarPosicion(event){
+    validarPosicion(event){
         let uri = GLOBAL.url 
         this.estante = document.getElementById('Estante').value
         this.valorHorizontal=document.getElementById('Valor_Horizontal').value
@@ -202,7 +195,7 @@ export default {
           this.posicionOcupada=false
         })
       },
-      validarE(event){
+    validarE(event){
      
           document.getElementById("btn_registro_insumo").disabled=false
       }

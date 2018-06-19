@@ -147,7 +147,6 @@
                   v-if="key=='Insumo'" >
                   {{itemInSaleDetail.Unidad_medida}}
                 </td>
-
          </tr>
         </tbody>
       </table>
@@ -155,13 +154,37 @@
     <div class="column"></div>
   </div>
 </div>
+
+<div class="container" id="app">
+  <div class="modal" v-bind:class="[active]">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+
+      <div class="column">
+      <div class="column is-four-fifths">
+        <div class="control">
+          <label class="label has-text-white" >Ingresa tu contraseña para poder aprobar la orden</label>
+          <label class="label has-text-white" >Contraseña Usuario</label>
+          <input class="input" type="password" id="contrasenia" />
+           <p>
+            <button class='button is-link is-rigth' id="showModal" v-on:click="validarU">Aceptar</button>
+          </p>
+           </div>
+         </div>
+       </div>
+    </div>
+    <button class="modal-close"></button>
+  </div>
+</div>
+
+
 <div class="container">
 <div class="columns">
     <div class='column is-two-fifths'></div>
     <div>
       <br>
       <br>
-      <button type='submit' id='btn_registro_insumo' class='button is-primary is-medium' v-on:click="aprobar">Aprobar</button>
+      <button type='submit' id='btn_registro_insumo' class='button is-primary is-medium' v-on:click="activar">Aprobar</button>
       <br>
       <br>
       </div>
@@ -187,7 +210,8 @@
         id:'',
         status:'true',
         compras:{},
-        datosProveedor:{}
+        datosProveedor:{},
+        active:''
       }
     },
     created: function(){
@@ -200,14 +224,11 @@
       consultarD(){
         let uri = GLOBAL.url 
         var conexion=uri+'compras/'+ this.$route.params.id
-
-        console.log('id ruta'+this.$route.params.id)
-
         this.axios.get(conexion,{headers: {authorization: localStorage.getItem('token')}})
         .then((response)=>{
           this.compras=response.data[0]
           this.datosProveedor=response.data[0].Proveedore
-          if(this.compras.Recibido){
+          if(this.compras.Aprobado){
             document.getElementById('btn_registro_insumo').disabled=true
           } 
 
@@ -215,25 +236,50 @@
         .catch((err)=>{
            alert("No se encontraron productos")
         })
-        
 
-        if(this.compras.Recibido){
+        if(this.compras.Aprobado){
             document.getElementById('btn_registro_insumo').disabled=true
         }
       },
       aprobar(){
+        
         let uri = GLOBAL.url 
-        var conexion=uri+'aprobar-orden/'+ this.$route.params.id+'/'+this.status
+        var conexion=uri+'aprobar-ordenA/'+ this.$route.params.id+'/'+this.status
         this.axios.put(conexion,'', {headers: {authorization:localStorage.getItem('token')}})
         .then((response)=>{
-          //this.compras=response.data[0]
+          document.getElementById('btn_registro_insumo').disabled=true
           alert('Aprobada')
+          //this.active=''
         })
         .catch((err)=>{
           console.log(err)
            alert("Error al aprobar orden")
+
         })
-      }
+      },
+      validarU(){
+        var usuarios={}
+        let uri = GLOBAL.url
+        var conexion= uri+'login'
+        var usuario=JSON.parse(localStorage.getItem('UsuarioLogueado'))
+        var contrasenia=document.getElementById('contrasenia').value
+        console.log(usuario.Rfc_usuario)
+        console.log(contrasenia)
+        usuarios.Rfc_usuario=usuario.Rfc_usuario
+        usuarios.Contrasenia=contrasenia
+        console.log(usuarios)
+       this.axios.post(conexion,usuarios)
+       .then((response)=>{
+       this.active=''
+       this.aprobar()       
+      })
+      .catch((err)=>{
+        alert(err)
+      })
+       },
+       activar(){
+        this.active='is-active'
+       }
      }
    }
 </script>

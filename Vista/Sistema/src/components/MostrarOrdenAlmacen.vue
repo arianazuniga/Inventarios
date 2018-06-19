@@ -5,7 +5,7 @@
 <div class="columns">
     <div class="column"></div>
     <div class="column">
-    <h5 class="title is-4">Ordenes de Compra Recibidas</h5> 
+    <h5 class="title is-4">Ordenes de Compra Aprobadas</h5> 
     </div>
     <div class="column"></div>
 </div>
@@ -30,7 +30,7 @@
         <tbody>
           <tr class=" hoverable" v-for="compra in compras">
                   <td>{{compra.ProveedoreRfcProveedor}}</td>
-                  <td><router-link :to="{name:'DetalleCompra', params:{id: compra.No_compra}}"> {{compra.No_compra}}</router-link></td>
+                  <td><router-link :to="{name:'DetalleCompraA', params:{id: compra.No_compra}}"> {{compra.No_compra}}</router-link></td>
                   <td>{{compra.Fecha_compra}}</td>
                   <td>{{compra.Total}}</td>
                 </tr>
@@ -45,7 +45,7 @@
 <div class="columns">
     <div class="column"></div>
     <div class="column">
-    <h5 class="title is-5">Ordenes de Compra No Recibidas</h5> 
+    <h5 class="title is-5">Ordenes de Compra No Aprobadas</h5> 
     </div>
     <div class="column"></div>
 </div>
@@ -70,7 +70,7 @@
         <tbody>
           <tr class=" hoverable" v-for="compra in comprasNA">
                   <td>{{compra.ProveedoreRfcProveedor}}</td>
-                  <td><router-link :to="{name:'DetalleCompra', params:{id: compra.No_compra}}"> {{compra.No_compra}}</router-link></td>
+                 <td><router-link :to="{name:'DetalleCompraA', params:{id: compra.No_compra}}"> {{compra.No_compra}}</router-link></td>
                   <td>{{compra.Fecha_compra}}</td>
                   <td>{{compra.Total}}</td>
                 </tr>
@@ -112,7 +112,7 @@
     methods:{
         consultar(){
         let uri = GLOBAL.url 
-        var conexion=uri+'mostrar-orden'
+        var conexion=uri+'mostrar-ordenAA'
         this.axios.get(conexion,{headers: {authorization: localStorage.getItem('token')}})
         .then((response)=>{
           
@@ -126,7 +126,7 @@
       },
       consultarNA(){
         let uri = GLOBAL.url 
-        var conexion=uri+'mostrar-ordenNA'
+        var conexion=uri+'mostrar-ordenNAA'
         this.axios.get(conexion,{headers: {authorization: localStorage.getItem('token')}})
         .then((response)=>{
           
@@ -138,7 +138,7 @@
            alert("No se encontraron productos")
         })
       },
-      routerLinkToDetails() {
+     routerLinkToDetails() {
     this.$router.push({ path: '/detalle-compra/'+this.id });
      }
 

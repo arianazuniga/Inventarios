@@ -17,18 +17,31 @@
 	          Opciónes
 	        </a>
 	        <div class="navbar-dropdown is-boxed">
+	          	<router-link :to="{name: 'RegistroUsuario'}" class="navbar-item" >
+	          		Registro de usuarios
+	        	</router-link>
 	          	<router-link :to="{name: 'RegistroInsumo'}" class="navbar-item" >
 	          		Registro de insumos
 	        	</router-link>
 	          	<router-link :to="{name: 'RegistroProveedor'}" class="navbar-item" >
 	          		Registro de proveedores
 	        	</router-link>
+	        	<router-link :to="{name: 'RegistroProducto'}" class="navbar-item" >
+	          		Registro de productos
+	        	</router-link>
 	          	<router-link :to="{name: 'MostrarInsumo'}" class="navbar-item" >
 	          		Visualizar insumos
+	        	</router-link>
+	        	<router-link :to="{name: 'MostrarProducto'}" class="navbar-item" >
+	          		Visualizar producto
 	        	</router-link>
 	        	<router-link :to="{name: 'MostrarOrden'}" class="navbar-item" >
 	          		Visualizar ordenes
 	        	</router-link>
+	        	<router-link :to="{name: 'MostrarOrdenAlmacen'}" class="navbar-item" >
+	          		Visualizar ordenes almacen
+	        	</router-link>
+
 	        </div>
 	      </div>
 	    </div>

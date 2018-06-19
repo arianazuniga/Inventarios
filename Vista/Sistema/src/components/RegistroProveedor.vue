@@ -11,7 +11,7 @@
           </div>
           
           <br>
-          <form v-on:submit.prevent=agregarProveedor @submit.prevent="limpiar">
+          <form v-on:submit.prevent=validarVacio>
             <div class="field">
               <label class="label">RFC proveedor</label>
               <div class="control">
@@ -23,7 +23,7 @@
             <div class="field">
              <label class="label">Razon social</label>
              <div class="control">
-              <input  type="text" class="input" v-model="proveedor.Razon_social" required>
+              <input  type="text" class="input" v-model="proveedor.Razon_social" required v-on:keyup="validarE">
              </div>
             </div>
 
@@ -107,9 +107,9 @@
             </div>
 
             <div class="field">
-             <label class="label">Código Postal </label>
+             <label class="label">Código Postal</label>
              <div class="control">
-              <input  type="text" class="input" v-model="proveedor.Cp" required pattern="0[1-9][0-9]{3}|[1-4][0-9]{4}|9[0-9][0-9]{3}">
+              <input  type="text" class="input" v-model="proveedor.Cp" required pattern="[0-9]{5}">
              </div>
             </div>
 
@@ -144,7 +144,8 @@ export default {
       User:'',
       rfc:'',
       rfcRegistrado:'',
-      correoRegistrado:''
+      correoRegistrado:'',
+      razonSocial:''
 
     }
   },
@@ -155,12 +156,23 @@ export default {
 
     },
   methods:{
+    validarVacio(){
+      this.razonSocial= this.proveedor.Razon_social
+        if(this.razonSocial.trim()===""){
+          alert("campo vacio")
+           document.getElementById("btn_registro_proveedor").disabled=true
+        }else{
+          this.proveedor.Razon_social= this.razonSocial
+          this.agregarProveedor()
+        }
+    },
   
     agregarProveedor(){
         let uri = GLOBAL.url;
         this.axios.post(uri+'registro-proveedor', this.proveedor, {headers: {authorization: localStorage.getItem('token')}})
         .then((response) => {
               alert("Proveedor "+ this.proveedor.Razon_social+" registrado")
+              this.limpiar
                this.proveedor={}       
             
         })
@@ -207,6 +219,10 @@ export default {
           this.correoRegistrado=false
            
         })
+      },
+      validarE(event){
+     
+          document.getElementById("btn_registro_proveedor").disabled=false
       }
     }
   }

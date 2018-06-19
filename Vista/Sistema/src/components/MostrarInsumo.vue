@@ -30,19 +30,45 @@
                   <th scope="col">Nombre</th>
                   <th scope="col">Color</th>
                   <th scope="col">Unidad</th>
+                  <th scope="col">Estante</th>
+                  <th scope="col">Valor Horizontal</th>
+                  <th scope="col">Valor Vertical</th>
+                  <th scope="col">Stock</th>
+                  <th scope="col">Punto de reorden</th>
                 </tr>
               </thead>
 
               <tbody>
                 <tr class=" hoverable" v-for="insumo in insumos">
-                  <td>{{insumo.Id_insumo}}</td>
+                  <td><router-link :to="{name:'ModificarInsumo', params:{id: insumo.Id_insumo}}"> {{insumo.Id_insumo}}</router-link></td>
                   <td>{{insumo.Nombre}}</td>
                   <td>{{insumo.Color}}</td>
                   <td>{{insumo.Unidad_medida}}</td>
+                  <td>{{insumo.Estante}}</td>
+                  <td>{{insumo.Valor_Horizontal}}</td>
+                  <td>{{insumo.Valor_Vertical}}</td>
+                  <td>{{insumo.Stock}}</td>
+                  <td>{{insumo.Punto_Reorden}}</td>
                 </tr>
               </tbody>
             </table>
       </div>
+      <div class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Modal title</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      hhhhhhh
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success">Save changes</button>
+      <button class="button">Cancel</button>
+    </footer>
+  </div>
+</div>
 </div>
 <div v-else>
   <br>
@@ -89,11 +115,13 @@
         var conexion=uri+'mostrar-insumo/'+this.id
         this.axios.get(conexion,{headers: {authorization: localStorage.getItem('token')}})
         .then((response)=>{
-            this.insumos=response.data;
+            this.insumos=response.data
+            if(this.insumos=='')
+            {
+              alert("No se encontraron productos")
+            }
         })
-        .catch((err)=>{
-           alert("No se encontraron productos")
-        })
+        
       }
     }
   }

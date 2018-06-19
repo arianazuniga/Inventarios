@@ -38,15 +38,12 @@ import{GLOBAL} from '../Servicios/Global'
 import router from './../router'
 export default {
   data () {
-
     return {
      usuario:{}
    }
-
   },
   created: function(){
       localStorage.clean()
-
     },
   methods: {
     login(){
@@ -56,7 +53,6 @@ export default {
       .then((response)=>{
         var usuarioResponse= response.data.usuario
         localStorage.setItem('UsuarioLogueado',JSON.stringify(usuarioResponse))
-
         this.usuario.gethash=true
         
         this.axios.post(conexion,this.usuario)
@@ -70,7 +66,6 @@ export default {
       })
     }
   }
-
 }
 </script>
 
@@ -82,22 +77,18 @@ export default {
       min-height: 100vh;
       flex-direction: column;
     }
-
     main {
       flex: 1 0 auto;
     }
-
     .contenido {
       background: #fff;
     }
-
     .input-field input[type=date]:focus + label
     .input-field input[type=text]:focus + label,
     .input-field input[type=email]:focus + label,
     .input-field input[type=password]:focus + label {
       color: #e91e63;
     }
-
     .input-field input[type=date]:focus,
     .input-field input[type=text]:focus,
     .input-field input[type=email]:focus,
